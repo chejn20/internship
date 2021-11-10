@@ -66,4 +66,31 @@ for ii in list(range(len(xx4))):
 
 plt.show()
 
-plt.savefig('tt1.png')
+# plt.savefig('tt1.png')
+
+# %%
+len_build=np.array([7,9,12,15])
+len_2build=[]
+for ii in len_build:
+    for jj in len_build:
+        len_2build.append(ii+jj)
+len_2build=np.unique(len_2build)
+
+len_3build=[]
+for ii in len_build:
+    for jj in len_build:
+        for kk in len_build:
+            len_3build.append(ii+jj+kk)
+len_3build=np.unique(len_3build)
+
+len_4build=[]
+for ii in len_build:
+    for jj in len_build:
+        for kk in len_build:
+            for ll in len_build:
+                len_4build.append(ii+jj+kk+ll)
+len_4build=np.unique(len_4build)
+
+len_bulid_total=np.hstack((len_2build,len_3build,len_4build))
+len_bulid_total=np.sort(len_bulid_total[(len_bulid_total>18) & (len_bulid_total<50)])
+len_bulid_total=np.unique(len_bulid_total)
