@@ -1,15 +1,24 @@
 # %%
 import numpy as np
 import matplotlib.pyplot as plt
-xx=np.array([0,100,140,150,10,0])
-yy=np.array([140,150,130,10,10,140])
+xx=np.array([0,300,340,350,10,0])
+yy=np.array([340,350,330,10,10,340])
 plt.figure(dpi=300,figsize=(4,4))
 plt.plot(xx,yy)
-xx_dif=np.diff(xx)
-yy_dif=np.diff(yy)
-slope=yy_dif/xx_dif
-slope=np.append(slope,slope[0])
 
+# 计算斜率函数
+def slope_cal(x_cor,y_cor):
+    xx=x_cor
+    yy=y_cor
+    xx_dif=np.diff(xx)
+    yy_dif=np.diff(yy)
+    slope=yy_dif/xx_dif
+    slope=np.append(slope,slope[0])
+    return slope
+
+slope=slope_cal(xx,yy)    
+
+# 去除最大角
 deg1=[]
 for ii in list(range(len(slope)-1)):
     # print(ii)
@@ -19,12 +28,12 @@ for ii in list(range(len(slope)-1)):
         deg=deg+180
     deg1.append(deg)
 pos=np.where(deg1==np.max(deg1))
-# xx[pos[0]+1]
+
 xx1=np.delete(xx,pos[0]+1)
 yy1=np.delete(yy,pos[0]+1)
 plt.plot(xx1,yy1)
 
-
+# 退线
 max_x=np.max(xx1)
 max_y=np.max(yy1)
 min_x=np.min(xx1)
@@ -46,6 +55,7 @@ for ii in list(range(len(xx1))):
 
 plt.plot(xx2,yy2)
 
+# 划分简单的网格
 xx3=np.sort(xx2)
 xx3=np.unique(xx3)
 posx_l=xx3[1]
@@ -68,8 +78,8 @@ plt.show()
 
 # plt.savefig('tt1.png')
 
-# %%
-len_build=np.array([7,9,12,15])
+# 计算符合条件的长度组合
+len_build=np.array([7,9,11,15])
 len_2build=[]
 for ii in len_build:
     for jj in len_build:
@@ -94,3 +104,32 @@ len_4build=np.unique(len_4build)
 len_bulid_total=np.hstack((len_2build,len_3build,len_4build))
 len_bulid_total=np.sort(len_bulid_total[(len_bulid_total>18) & (len_bulid_total<50)])
 len_bulid_total=np.unique(len_bulid_total)
+
+# %%
+# 计算东西向能排行数
+interval=80
+depth=12
+h_raw_num=np.floor((max_y-min_y)/(interval+depth))
+
+
+
+# %%
+# 判断点是否在区域内
+coor=np.array([xx2,yy2])
+co0r=coor.T[:len(xx2)-1,:]
+# fig=plt.figure()
+# axes=fig.add_subplot(1)
+# p1=plt.Polygon(cor)
+# axes.add_patch(p1)
+# plt.show()
+# from shapely import geometry
+import shapely.geometry as geometry
+
+def if_inPoly(polygon, Points):
+    line = geometry.LineString(polygon)
+    point = geometry.Point(Points)
+    polygon = geometry.Polygon(line)
+    return polygon.contains(point)
+
+pt2 = (400, 400)
+print(if_inPoly(co0r, pt2))
