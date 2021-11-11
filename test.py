@@ -106,7 +106,7 @@ len_bulid_total=np.sort(len_bulid_total[(len_bulid_total>18) & (len_bulid_total<
 len_bulid_total=np.unique(len_bulid_total)
 
 # %%
-# 计算东西向能排行数
+# 计算东西向能排行数(大致)
 interval=80
 depth=12
 h_raw_num=np.floor((max_y-min_y)/(interval+depth))
@@ -133,3 +133,36 @@ def if_inPoly(polygon, Points):
 
 pt2 = (400, 400)
 print(if_inPoly(co0r, pt2))
+
+# %%
+# 考虑直排两种长度的结果
+
+def closest(mylist, Number):
+    answer=Number-5-mylist
+    if all(answer<0)==True:
+        return [0,Number]
+    else:
+        answer1=answer[(answer>=0)]
+        answer1=min(answer1)
+        indd=np.where(answer==answer1)
+        return [mylist[indd[0]],answer1]
+
+
+ll=325  # 随便定的长度
+sche={}
+
+for ii in np.flipud(len_bulid_total):
+    times=ii-len_bulid_total[0]
+    ll1=ll-(ii+2.5)*2
+    build_num=np.floor(ll1/(ii+5))
+    mod_num=np.mod(ll1,(ii+5))
+    if mod_num<min(len_bulid_total):
+        sche_name=str(ii)
+        sche[sche_name]=[ii,build_num+2,mod_num]
+    else:
+        aa=closest(len_bulid_total[:times-1],mod_num)
+        sche_name=str(ii)
+        sche[sche_name]=[ii,build_num+2,mod_num,aa[0],aa[1]]
+
+
+
