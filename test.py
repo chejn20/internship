@@ -105,13 +105,6 @@ len_bulid_total=np.hstack((len_2build,len_3build,len_4build))
 len_bulid_total=np.sort(len_bulid_total[(len_bulid_total>18) & (len_bulid_total<50)])
 len_bulid_total=np.unique(len_bulid_total)
 
-# %%
-# 计算东西向能排行数(大致)
-interval=80
-depth=12
-h_raw_num=np.floor((max_y-min_y)/(interval+depth))
-
-
 
 # %%
 # 判断点是否在区域内
@@ -164,5 +157,75 @@ for ii in np.flipud(len_bulid_total):
         sche_name=str(ii)
         sche[sche_name]=[ii,build_num+2,mod_num,aa[0],aa[1]]
 
+
+# 1112   (作废)
+# %%
+#计算多边形重心
+
+def core_x_tri(cor_x):
+    # 计算三角形重心x及面积
+    core_x=np.sum(cor_x)/3
+    return [core_x]
+
+def core_y_tri(cor_y):
+    # 计算三角形重心y及面积
+    core_y=np.sum(cor_y)/3
+    return [core_y]
+
+def core_area_tri(cor_x,cor_y):
+    # 计算三角形面积
+    S=((cor_x[2]-cor_x[0])*(cor_y[1]-cor_y[0])-(cor_x[1]-cor_x[0])*(cor_y[2]-cor_y[0]))/2
+    return [S]
+# %%
+
+def cut_polyg(arr_x,arr_y):
+    x=arr_x
+    y=arr_y
+    tri_x=[]
+    tri_y=[]
+    tri_area=[]
+    tem_x=x[list(range(0,len(x),2))]
+    tem_y=y[list(range(0,len(y),2))]
+
+    for ii in list(range(len(x)-2)):
+        if ii % 2==0:
+            cor_x_tri=x[ii:3]
+            cor_y_tri=y[ii:3]
+            tri_x.append(core_x_tri(cor_x_tri))
+            tri_y.append(core_y_tri(cor_y_tri))
+            tri_area.append(core_area_tri(cor_x_tri,cor_y_tri))
+
+xx=np.array([150,220,300,400,300,150,50,150])
+yy=np.array([300,350,280,150,20,15,130,300])
+plt.plot(xx,yy)
+
+# %%
+slope1=slope_cal(xx2,yy2)
+west_slope=slope1[-2]
+east_slope=slope1[1]
+
+const1=yy2[0]-west_slope*xx2[0]
+const2=yy2[1]-west_slope*xx2[1]
+# posi_x_first=abs(np.sort(yy2)[-2]/west_slope)
+# 计算东西向能排行数(大致)
+# interval=80
+# depth=12
+# h_raw_num=np.floor((max_y-min_y)/(interval+depth))
+yy_raw=np.arange(np.sort(np.unique(yy2))[-2],np.sort(np.unique(yy2))[0],-(interval+depth))
+if yy_raw[-1]<depth:
+    np.delete(yy_raw,-1)
+posi_x_l=(yy_raw-const1)/west_slope
+posi_x_r=(yy_raw-const2)/west_slope
+
+plt.plot(xx2,yy2)
+for ii in list(range(len(yy_raw))):
+    plt.plot([posi_x_l[ii],posi_x_r[ii]],[yy_raw[ii],yy_raw[ii]],'r')
+
+
+# %%
+# 计算东西向能排行数(大致)
+interval=80
+depth=12
+h_raw_num=np.floor((max_y-min_y)/(interval+depth))
 
 
