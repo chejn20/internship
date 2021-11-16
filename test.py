@@ -228,4 +228,77 @@ interval=80
 depth=12
 h_raw_num=np.floor((max_y-min_y)/(interval+depth))
 
+# %% 1113
+north_west_x=[]
+north_west_y=[]
+for ii in list(range(len(xx)-1)):
+    # print(ii)
+    point_x=xx[ii]
+    if point_x<mid_x:
+        north_west_x.append(point_x)
+        north_west_y.append(yy[ii])
+north_west_x1=[]
+north_west_y1=[]
+if len(north_west_x) != 0:
+    for ii in list(range(len(north_west_y))):
+        if north_west_y[ii]>mid_y:
+            north_west_y1.append(north_west_y[ii])
+            north_west_x1.append(north_west_x[ii])
+if len(north_west_x1)==1:
+    north_west_x_final=north_west_x1
+    north_west_y_final=north_west_y1
+
+if len(north_west_x1)>1:
+    slope_mid_point=[]
+    length_mid_point=[]
+    for ii in list(range(len(north_west_x1))):
+        slope_mid_point.append((north_west_y1[ii]-mid_y)/(north_west_x1-mid_x))
+        length_mid_point.append(np.sqrt((north_west_y1[ii]-mid_y)**2+(north_west_x1-mid_x)**2))
+    slope_mid_point_1=np.abs(np.array(slope_mid_point)+1)
+    posi_slope_min=np.where(slope_mid_point_1==np.min(slope_mid_point_1))
+    if length_mid_point[posi_slope_min[0]]== np.max(length_mid_point):
+        north_west_x_final=north_west_x1[posi_slope_min[0]]
+        north_west_y_final=north_west_y1[posi_slope_min[0]]
+    else:
+        north_west_x_final=north_west_x1[np.where(slope_mid_point==np.min(slope_mid_point))[0]]
+        north_west_x_final=north_west_x1[np.where(slope_mid_point==np.min(slope_mid_point))[0]]
+
+if len(north_west_x)==0:
+    north_east_x=[]
+    north_east_y=[]
+    for ii in list(range(len(xx)-1)):
+        # print(ii)
+        point_x=xx[ii]
+        if point_x>mid_x:
+            north_east_x.append(point_x)
+            north_east_y.append(yy[ii])
+    north_east_x1=[]
+    north_east_y1=[]
+    for ii in list(range(len(north_east_y))):
+        if north_east_y[ii]>mid_y:
+            north_east_y1.append(north_east_y[ii])
+            north_east_x1.append(north_east_x[ii])
+            
+    if len(north_east_x1)==1:
+        north_east_x_final=north_east_x1
+        north_east_y_final=north_east_y1
+
+    if len(north_east_x1)>1:
+        slope_mid_point=[]
+        length_mid_point=[]
+        for ii in list(range(len(north_east_x1))):
+            slope_mid_point.append((north_east_y1[ii]-mid_y)/(north_east_x1-mid_x))
+            length_mid_point.append(np.sqrt((north_east_y1[ii]-mid_y)**2+(north_east_x1-mid_x)**2))
+        slope_mid_point_1=np.abs(np.array(slope_mid_point)-1)
+        posi_slope_min=np.where(slope_mid_point_1==np.min(slope_mid_point_1))
+        if length_mid_point[posi_slope_min[0]]== np.max(length_mid_point):
+            north_east_x_final=north_east_x1[posi_slope_min[0]]
+            north_east_y_final=north_east_y1[posi_slope_min[0]]
+        else:
+            north_east_x_final=north_east_x1[np.where(slope_mid_point==np.max(slope_mid_point))[0]]
+            north_east_x_final=north_east_x1[np.where(slope_mid_point==np.max(slope_mid_point))[0]]
+
+
+
+     
 
