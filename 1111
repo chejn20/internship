@@ -1,0 +1,115 @@
+def calculation_SN1(xx, yy, x_point):
+    # xx scaled x
+    # yy scaled y
+    # y_max = ymax
+    # y_min = np.min(yy)
+    dya = np.array(xx) - x_point
+
+    intersec_x = []
+    intersec_y = []
+    for ii in range(len(dya) - 1):
+        mult = dya[ii]*dya[ii + 1]
+        if mult < 0:
+            intersec_x.append(xx[ii])
+            intersec_x.append(xx[ii + 1])
+            intersec_y.append(yy[ii])
+            intersec_y.append(yy[ii + 1])
+
+    slope_intersec = []
+    const_intersec = []
+
+    for ii in range(len(intersec_x)):
+        if ii % 2 != 0:
+            temp = (intersec_y[ii]-intersec_y[ii - 1])/(intersec_x[ii] - intersec_x[ii - 1])
+            slope_intersec.append(temp)
+            temp1 = intersec_y[ii] - temp*intersec_x[ii]
+            const_intersec.append(temp1)
+
+    if intersec_y[1] > intersec_y[2]:     #前两个点在上方
+
+#
+        if slope_intersec[0] > 0 and slope_intersec[1] < 0:    # Left slope is greater than 0, right slope is less than 0
+            intersec_posi_y1 = x_point * slope_intersec[0] + const_intersec[0]
+            intersec_posi_y2 = x_point * slope_intersec[1] + const_intersec[1]
+
+        elif slope_intersec[0] > 0 and slope_intersec[1] > 0:    # Left and right slope are greater than 0
+            intersec_posi_y1 = x_point * slope_intersec[0] + const_intersec[0]
+            intersec_posi_y2 = (x_point + 12) * slope_intersec[1] + const_intersec[1]
+
+        elif slope_intersec[0] < 0 and slope_intersec[1] < 0:    # Left and right slope are less than 0
+            intersec_posi_y1 = (x_point + 12) * slope_intersec[0] + const_intersec[0]
+            intersec_posi_y2 = x_point * slope_intersec[1] + const_intersec[1]
+
+        elif slope_intersec[0] < 0 and slope_intersec[1] > 0:    # Left slope is less than 0, right slope is greater than 0
+            intersec_posi_y1 = (x_point + 12) * slope_intersec[0] + const_intersec[0]
+            intersec_posi_y2 = (x_point + 12) * slope_intersec[1] + const_intersec[1]
+        return intersec_posi_y1, intersec_posi_y2
+
+    elif intersec_y[1]< intersec_y[2]:     #前两个点在下方
+
+#
+        if slope_intersec[0] > 0 and slope_intersec[1] < 0:    # Left slope is greater than 0, right slope is less than 0
+            intersec_posi_y1 = (x_point + 12) * slope_intersec[0] + const_intersec[0]
+            intersec_posi_y2 = (x_point + 12) * slope_intersec[1] + const_intersec[1]
+
+        elif slope_intersec[0] > 0 and slope_intersec[1] > 0:    # Left and right slope are greater than 0
+            intersec_posi_y1 = (x_point + 12) * slope_intersec[0] + const_intersec[0]
+            intersec_posi_y2 = x_point * slope_intersec[1] + const_intersec[1]
+
+        elif slope_intersec[0] < 0 and slope_intersec[1] < 0:    # Left slope is less than 0
+            intersec_posi_y1 = x_point * slope_intersec[0] + const_intersec[0]
+            intersec_posi_y2 = (x_point + 12) * slope_intersec[1] + const_intersec[1]
+
+        elif slope_intersec[0] < 0 and slope_intersec[1] > 0:    # Left slope is less than 0, right slope is greater than 0
+            intersec_posi_y1 = x_point * slope_intersec[0] + const_intersec[0]
+            intersec_posi_y2 = x_point * slope_intersec[1] + const_intersec[1]
+
+        return intersec_posi_y2, intersec_posi_y1
+
+    elif intersec_y[1] == intersec_y[2]:  #Intersect two adjacent lines
+
+        if intersec_y[0] > intersec_y[3]:
+
+            if slope_intersec[0] > 0 and slope_intersec[1] < 0:
+                intersec_posi_y1 = (x_point + 12) * slope_intersec[0] + const_intersec[0]
+                intersec_posi_y2 = (x_point + 12) * slope_intersec[1] + const_intersec[1]
+
+            elif slope_intersec[0] > 0 and slope_intersec[1] > 0:
+                intersec_posi_y1 = (x_point + 12) * slope_intersec[0] + const_intersec[0]
+                intersec_posi_y2 = x_point * slope_intersec[1] + const_intersec[1]
+
+            elif slope_intersec[0] < 0 and slope_intersec[1] < 0:
+                intersec_posi_y1 = x_point * slope_intersec[0] + const_intersec[0]
+                intersec_posi_y2 = (x_point + 12) * slope_intersec[1] + const_intersec[1]
+
+            elif slope_intersec[0] < 0 and slope_intersec[1] > 0:
+                intersec_posi_y1 = x_point * slope_intersec[0] + const_intersec[0]
+                intersec_posi_y2 = x_point * slope_intersec[1] + const_intersec[1]
+
+
+            return intersec_posi_y1, intersec_posi_y2
+
+        elif intersec_y[0] < intersec_y[3]:
+
+            if slope_intersec[0] > 0 and slope_intersec[1] < 0:
+                intersec_posi_y1 = x_point * slope_intersec[0] + const_intersec[0]
+                intersec_posi_y2 = x_point * slope_intersec[1] + const_intersec[1]
+
+            elif slope_intersec[0] > 0 and slope_intersec[1] > 0:
+                intersec_posi_y1 = x_point * slope_intersec[0] + const_intersec[0]
+                intersec_posi_y2 = (x_point + 12) * slope_intersec[1] + const_intersec[1]
+
+            elif slope_intersec[0] < 0 and slope_intersec[1] < 0:
+                intersec_posi_y1 = (x_point + 12) * slope_intersec[0] + const_intersec[0]
+                intersec_posi_y2 = x_point * slope_intersec[1] + const_intersec[1]
+            elif slope_intersec[0] < 0 and slope_intersec[1] > 0:
+                intersec_posi_y1 = (x_point + 12) * slope_intersec[0] + const_intersec[0]
+                intersec_posi_y2 = (x_point + 12) * slope_intersec[1] + const_intersec[1]
+
+            return intersec_posi_y2, intersec_posi_y1
+
+# %%
+a=15
+if a<20:
+    a=a+1
+    continue
