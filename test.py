@@ -1,14 +1,16 @@
 # %%
 import numpy as np
 import matplotlib.pyplot as plt
-xx=np.array([0,300,340,350,10,0])
-yy=np.array([340,350,330,10,10,340])
+xx=np.array([0,150,250,350,10,0])
+yy=np.array([340,340,360,10,10,340])
+# yy = np.array([300, 300, 330, 10, 20, 300])
 plt.figure(dpi=300,figsize=(4,4))
 plt.plot(xx,yy)
 
 # 计算斜率函数
 def slope_cal(x_cor,y_cor):
     xx=x_cor
+
     yy=y_cor
     xx_dif=np.diff(xx)
     yy_dif=np.diff(yy)
@@ -19,60 +21,60 @@ def slope_cal(x_cor,y_cor):
 slope=slope_cal(xx,yy)    
 
 # 去除最大角
-deg1=[]
-for ii in list(range(len(slope)-1)):
-    # print(ii)
-    ang=(slope[ii+1]-slope[ii])/(1+slope[ii+1]*slope[ii])
-    deg=deg=np.arctan(ang)* 180 / np.pi
-    if deg <0:
-        deg=deg+180
-    deg1.append(deg)
-pos=np.where(deg1==np.max(deg1))
+# deg1=[]
+# for ii in list(range(len(slope)-1)):
+#     # print(ii)
+#     ang=(slope[ii+1]-slope[ii])/(1+slope[ii+1]*slope[ii])
+#     deg=deg=np.arctan(ang)* 180 / np.pi
+#     if deg <0:
+#         deg=deg+180
+#     deg1.append(deg)
+# pos=np.where(deg1==np.max(deg1))
 
-xx1=np.delete(xx,pos[0]+1)
-yy1=np.delete(yy,pos[0]+1)
-plt.plot(xx1,yy1)
+# xx1=np.delete(xx,pos[0]+1)
+# yy1=np.delete(yy,pos[0]+1)
+# plt.plot(xx1,yy1)
 
 # 退线
-max_x=np.max(xx1)
-max_y=np.max(yy1)
-min_x=np.min(xx1)
-min_y=np.min(yy1)
+max_x=np.max(xx)
+max_y=np.max(yy)
+min_x=np.min(xx)
+min_y=np.min(yy)
 mid_x=(max_x+min_x)/2
 mid_y=(max_y+min_y)/2
 xx2=[]
 yy2=[]
-for ii in list(range(len(xx1))):
+for ii in list(range(len(xx))):
     # print(ii)
-    if xx1[ii]< mid_x:
-        xx2.append(xx1[ii]+10)
+    if xx[ii]< mid_x:
+        xx2.append(xx[ii]+10)
     else:
-        xx2.append(xx1[ii]-10)
-    if yy1[ii]< mid_y:
-        yy2.append(yy1[ii]+10)
+        xx2.append(xx[ii]-10)
+    if yy[ii]< mid_y:
+        yy2.append(yy[ii]+10)
     else:
-        yy2.append(yy1[ii]-10)
+        yy2.append(yy[ii]-10)
 
 plt.plot(xx2,yy2)
 
 # 划分简单的网格
-xx3=np.sort(xx2)
-xx3=np.unique(xx3)
-posx_l=xx3[1]
-posx_r=np.flipud(xx3)[1]
-xx4=np.arange(posx_l,posx_r,20)
-yy3=np.sort(yy2)
-yy3=np.unique(yy3)
-posy_d=yy3[0]
-posy_u=np.flipud(yy3)[1]
-yy4=np.arange(posy_d,posy_u,10)
+# xx3=np.sort(xx2)
+# xx3=np.unique(xx3)
+# posx_l=xx3[1]
+# posx_r=np.flipud(xx3)[1]
+# xx4=np.arange(posx_l,posx_r,20)
+# yy3=np.sort(yy2)
+# yy3=np.unique(yy3)
+# posy_d=yy3[0]
+# posy_u=np.flipud(yy3)[1]
+# yy4=np.arange(posy_d,posy_u,10)
 
 
-for ii in list(range(len(yy4))):
-    plt.plot([posx_l,posx_r],[yy4[ii],yy4[ii]],'r')
+# for ii in list(range(len(yy4))):
+#     plt.plot([posx_l,posx_r],[yy4[ii],yy4[ii]],'r')
 
-for ii in list(range(len(xx4))):
-    plt.plot([xx4[ii],xx4[ii]],[posy_d,posy_u],'b')
+# for ii in list(range(len(xx4))):
+#     plt.plot([xx4[ii],xx4[ii]],[posy_d,posy_u],'b')
 
 plt.show()
 
@@ -124,7 +126,7 @@ def if_inPoly(polygon, Points):
     polygon = geometry.Polygon(line)
     return polygon.contains(point)
 
-pt2 = (400, 400)
+pt2 = [10,330]
 print(if_inPoly(co0r, pt2))
 
 # %%
@@ -141,21 +143,38 @@ def closest(mylist, Number):
         return [mylist[indd[0]],answer1]
 
 
-ll=325  # 随便定的长度
-sche={}
+# ll=325  # 随便定的长度
+def arr_ew(ll,ll_build):
+    # ll 是东西长度， ll_build 是所有建筑的长度组合
+    sche={}
 
-for ii in np.flipud(len_bulid_total):
-    times=ii-len_bulid_total[0]
-    ll1=ll-(ii+2.5)*2
-    build_num=np.floor(ll1/(ii+5))
-    mod_num=np.mod(ll1,(ii+5))
-    if mod_num<min(len_bulid_total):
-        sche_name=str(ii)
-        sche[sche_name]=[ii,build_num+2,mod_num]
-    else:
-        aa=closest(len_bulid_total[:times-1],mod_num)
-        sche_name=str(ii)
-        sche[sche_name]=[ii,build_num+2,mod_num,aa[0],aa[1]]
+    for ii in np.flipud(ll_build):
+        times=ii-ll_build[0]
+        if ll>(ii+2.5)*2:
+            ll1=ll-(ii+2.5)*2
+            build_num=np.floor(ll1/(ii+5))
+            mod_num=np.mod(ll1,(ii+5))
+            if mod_num<min(ll_build):
+                sche_name=str(ii)
+                sche[sche_name]=[ii,build_num+2,mod_num,2*2.5+build_num*5+mod_num]
+            else:
+                aa=closest(ll_build[:times-1],mod_num)
+                sche_name=str(ii)
+                sche[sche_name]=[ii,build_num+2,mod_num,aa[0],aa[1],2*2.5+(build_num+1)*5+aa[1]]
+
+        if ll< (ii+2.5)*2  and  ll>ii+5:
+            ll1=ll-ii
+            build_num=np.floor(ll1/(ii+5))
+            mod_num=np.mod(ll1,(ii+5))
+            if mod_num<min(ll_build):
+                sche_name=str(ii)
+                sche[sche_name]=[ii,build_num+1,mod_num,2*2.5+build_num*5+mod_num]
+            else:
+                aa=closest(ll_build[:times-1],mod_num)
+                sche_name=str(ii)
+                sche[sche_name]=[ii,build_num+1,mod_num,aa[0],aa[1],2*2.5+(build_num+1)*5+aa[1]]
+
+    return sche
 
 
 # 1112   (作废)
@@ -274,6 +293,7 @@ if len(north_west_x)==0:
             north_east_y.append(yy[ii])
     north_east_x1=[]
     north_east_y1=[]
+
     for ii in list(range(len(north_east_y))):
         if north_east_y[ii]>mid_y:
             north_east_y1.append(north_east_y[ii])
@@ -298,7 +318,229 @@ if len(north_west_x)==0:
             north_east_x_final=north_east_x1[np.where(slope_mid_point==np.max(slope_mid_point))[0]]
             north_east_x_final=north_east_x1[np.where(slope_mid_point==np.max(slope_mid_point))[0]]
 
+# %%
+def isInPloygon(xx, yy, x, y):
+    """
+    # Judge whether the point is in the ploygon
+    :param xx: x axis
+    :param yy: y axis
+    :param x: x axis of point to be judged
+    :param y: y axis of point to be judged
+    :return: True: If point to be judged is in the polygon
+             False: If point to be judged is out of the polygon
+    """
+
+    flag = -1
+    for i in range(1, xx.shape[0]):
+        if x < max(xx[i], xx[i - 1]) and (min(yy[i], yy[i - 1]) < y < max(yy[i], yy[i - 1])):
+            flag = -1 * flag
+        elif yy[i] == y and yy[i - 1] == y and x < max(xx[i], xx[i - 1]):
+            continue
+        elif y == max(yy[i], yy[i - 1]) and x < max(xx[i], xx[i - 1]):
+            flag = -1 * flag
+        elif y == min(yy[i], yy[i - 1]) and x < max(xx[i], xx[i - 1]):
+            continue
+    if flag == 1:
+        return True
+    return False
+
+isInPloygon(np.array(xx2),np.array(yy2),10,330)
+
+# %%
+
+def calculation_SN(xx, yy, ymax):
+    # xx 是退线之后点横坐标
+    # yy 是退线之后点纵坐纵
+    y_max=ymax
+    # y_min=np.min(yy2)
+    dya=np.array(yy)-y_max
+
+    intersec_x=[]
+    intersec_y=[]
+    for ii in list(range(len(dya)-1)):
+        mult=dya[ii]*dya[ii+1]
+        if mult<0:
+            intersec_x.append(xx[ii])
+            intersec_x.append(xx[ii+1])
+            intersec_y.append(yy[ii])
+            intersec_y.append(yy[ii+1])
+
+    slope_intersec=[]
+    const_intersec=[]
+
+    for ii in list(range(len(intersec_x))):
+        if ii % 2 != 0:
+            temp=(intersec_y[ii]-intersec_y[ii-1])/(intersec_x[ii]-intersec_x[ii-1])
+            slope_intersec.append(temp) 
+            temp1=intersec_y[ii]-temp*intersec_x[ii]
+            const_intersec.append(temp1)
+
+    if intersec_x[1] <= intersec_x[2]:     #第一个点在最高点左侧
 
 
-     
+        if slope_intersec[0] > 0 and slope_intersec[1] < 0:    # 左边斜率大于0 右边斜率小于0
+            intersec_posi_x1=(y_max-const_intersec[0])/slope_intersec[0]
+            intersec_posi_x2=(y_max-const_intersec[1])/slope_intersec[1]
+
+        elif slope_intersec[0] > 0 and slope_intersec[1] > 0:    # 左边斜率大于0 右边斜率大于0
+            intersec_posi_x1=(y_max-const_intersec[0])/slope_intersec[0]
+            intersec_posi_x2=(y_max-12-const_intersec[1])/slope_intersec[1]
+
+        elif slope_intersec[0] < 0 and slope_intersec[1] < 0:    # 左边斜率小于0 右边斜率小于0
+            intersec_posi_x1=(y_max-12-const_intersec[0])/slope_intersec[0]
+            intersec_posi_x2=(y_max-const_intersec[1])/slope_intersec[1]
+
+        elif slope_intersec[0] < 0 and slope_intersec[1] > 0:    # 左边斜率小于0 右边斜率小大于0
+            intersec_posi_x1=(y_max-12-const_intersec[0])/slope_intersec[0]
+            intersec_posi_x2=(y_max-12-const_intersec[1])/slope_intersec[1]
+        return intersec_posi_x1, intersec_posi_x2
+
+    elif intersec_x[1] >= intersec_x[2]:     #第一个点在最高点右侧
+
+
+        if slope_intersec[0] > 0 and slope_intersec[1] < 0:    # 左边斜率大于0 右边斜率小于0
+            intersec_posi_x1=(y_max-12-const_intersec[0])/slope_intersec[0]
+            intersec_posi_x2=(y_max-12-const_intersec[1])/slope_intersec[1]
+
+        elif slope_intersec[0] > 0 and slope_intersec[1] > 0:    # 左边斜率大于0 右边斜率大于0
+            intersec_posi_x1=(y_max-12-const_intersec[0])/slope_intersec[0]
+            intersec_posi_x2=(y_max-const_intersec[1])/slope_intersec[1]
+
+        elif slope_intersec[0] < 0 and slope_intersec[1] < 0:    # 左边斜率小于0 右边斜率小于0
+            intersec_posi_x1=(y_max-const_intersec[0])/slope_intersec[0]
+            intersec_posi_x2=(y_max-12-const_intersec[1])/slope_intersec[1]
+
+        elif slope_intersec[0] < 0 and slope_intersec[1] > 0:    # 左边斜率小于0 右边斜率小大于0
+            intersec_posi_x1=(y_max-const_intersec[0])/slope_intersec[0]
+            intersec_posi_x2=(y_max-const_intersec[1])/slope_intersec[1]
+
+        return intersec_posi_x2, intersec_posi_x1
+
+# 计算东西向能排行数(大致)
+interval=80
+depth=12
+h_raw_num=np.floor((max_y-min_y)/(interval+depth))
+print(h_raw_num)
+plt.plot(xx2,yy2)
+y_max=np.max(yy2)
+y_min=np.min(yy2)
+
+
+for i in list(range(int(h_raw_num+2))):
+    if y_max-92-12<y_min:
+        break
+    
+    # intersec_posi_x1_total=[]
+    # intersec_posi_x2_total=[]
+
+    if i==0:
+        
+        y_max=y_max-6
+        intersec_posi_x1,intersec_posi_x2=calculation_SN(xx2,yy2,y_max)
+
+        # intersec_posi_x1_total.append(intersec_posi_x1)
+        # intersec_posi_x2_total.append(intersec_posi_x2)
+    
+        ll1=np.abs(intersec_posi_x2-intersec_posi_x1)
+
+
+        plt.plot([intersec_posi_x1,intersec_posi_x2],[y_max, y_max])
+
+        temp=arr_ew(ll1,len_bulid_total)
+
+        mod_aera=[]
+        for ii in len_bulid_total:
+            if ii+5>ll1:
+                break
+            if len(temp[str(ii)])==4:
+                mod_aera.append(temp[str(ii)][3])
+            if len(temp[str(ii)])==6:
+                mod_aera.append(temp[str(ii)][5])
+
+        min_mod=np.where(mod_aera==min(mod_aera))
+
+        num_build=temp[str(len_bulid_total[min_mod[0][0]])][1]
+        for jj in list(range(int(num_build))):
+            x_build_start=intersec_posi_x1+jj*(5+temp[str(len_bulid_total[min_mod[0][0]])][0])
+            x_build_second=x_build_start+temp[str(len_bulid_total[min_mod[0][0]])][0]
+            x_build=np.hstack((x_build_start,x_build_second))
+            x_build=np.hstack((x_build, np.flipud(x_build)))
+            x_build=np.append(x_build, x_build_start)
+
+            y_build=np.array([y_max, y_max, y_max-12, y_max-12, y_max])
+
+            plt.plot(x_build,y_build)
+
+
+        print('排楼方法为：'+str(temp[str(len_bulid_total[min_mod[0][0]])]))
+
+
+
+    else:
+        y_max=y_max-92
+
+        intersec_posi_x1,intersec_posi_x2=calculation_SN(xx2,yy2,y_max)
+
+        # intersec_posi_x1_total.append(intersec_posi_x1)
+        # intersec_posi_x2_total.append(intersec_posi_x2)
+        
+
+        ll1=np.abs(intersec_posi_x2-intersec_posi_x1)
+        plt.plot([intersec_posi_x1,intersec_posi_x2],[y_max, y_max])
+
+        temp=arr_ew(ll1,len_bulid_total)
+
+        mod_aera=[]
+        for ii in len_bulid_total:
+            if ii+5>ll1:
+                break
+            if len(temp[str(ii)])==4:
+                mod_aera.append(temp[str(ii)][3])
+            if len(temp[str(ii)])==6:
+                mod_aera.append(temp[str(ii)][5])
+
+        min_mod=np.where(mod_aera==min(mod_aera))
+
+        if len(temp[str(len_bulid_total[min_mod[0][0]])]) ==4:
+
+            num_build=temp[str(len_bulid_total[min_mod[0][0]])][1]
+            for jj in list(range(int(num_build))):
+                x_build_start=intersec_posi_x1+jj*(5+temp[str(len_bulid_total[min_mod[0][0]])][0])
+                x_build_second=x_build_start+temp[str(len_bulid_total[min_mod[0][0]])][0]
+                x_build=np.hstack((x_build_start,x_build_second))
+                x_build=np.hstack((x_build, np.flipud(x_build)))
+                x_build=np.append(x_build, x_build_start)
+
+                y_build=np.array([y_max, y_max, y_max-12, y_max-12, y_max])
+
+                plt.plot(x_build,y_build)
+        
+        elif len(temp[str(len_bulid_total[min_mod[0][0]])]) ==6:
+            num_build=temp[str(len_bulid_total[min_mod[0][0]])][1]+1
+            for jj in list(range(int(num_build))):
+                x_build_start=intersec_posi_x1+jj*(5+temp[str(len_bulid_total[min_mod[0][0]])][0])
+                if jj < num_build:
+                    x_build_second=x_build_start+temp[str(len_bulid_total[min_mod[0][0]])][0]
+                elif jj == num_build:
+                    x_build_second=x_build_start+temp[str(len_bulid_total[min_mod[0][0]])][3]
+                x_build=np.hstack((x_build_start,x_build_second))
+                x_build=np.hstack((x_build, np.flipud(x_build)))
+                x_build=np.append(x_build, x_build_start)
+
+                y_build=np.array([y_max, y_max, y_max-12, y_max-12, y_max])
+
+                plt.plot(x_build,y_build)
+
+
+
+        print('排楼方法为：'+str(temp[str(len_bulid_total[min_mod[0][0]])]))
+
+
+
+    
+
+
+
+
+
 
