@@ -547,6 +547,7 @@ for ii in np.arange(1,num_WE-2):
 
             if  abs( intersec_posi_y3-intersec_posi_y1 ) < 12:
                 x_min=x_min - len_build_total[jj]
+                continue
             
 
 
@@ -614,6 +615,7 @@ for ii in np.arange(1,num_WE-2):
 
             if  abs( intersec_posi_y3-intersec_posi_y1 ) < 12:
                 x_min=x_min - len_build_total[jj]
+                continue
 
             if x_min <=max(scale_x):
                 
@@ -640,6 +642,7 @@ for ii in np.arange(1,num_WE-2):
 
 print(y_up)
 print(x_lengh)
+print(max(scale_x))
 
 for ii in range(len(y_up)-1):
     if ii == 0:
